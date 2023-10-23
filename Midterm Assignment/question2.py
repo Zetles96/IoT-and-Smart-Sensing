@@ -12,19 +12,19 @@ WAVELENGTH_m = WAVELENGTH_mm / 1000  # Wavelength of mmWave signals in m
 SAMPLING_RATE = 500  # Sampling rate in Hz
 
 
-def respiration_cycles() -> float:
+def respiration_cycles(phase: np.ndarray = PHASE) -> float:
     """
     Calculate the number of respiration cycles
     :return: The number of respiration cycles
     """
     # Calculate the FFT of the phase signal
-    fft_result = np.fft.fft(PHASE)
+    fft_result = np.fft.fft(phase)
 
     # Calculate the corresponding frequencies
-    frequencies = np.fft.fftfreq(len(PHASE), 1 / FS)
+    frequencies = np.fft.fftfreq(len(phase), 1 / FS)
 
     # Find the index corresponding to the peak frequency
-    lower_freq_limit = 0.1
+    lower_freq_limit = 0.0000001
     upper_freq_limit = 5
     mask = (frequencies >= lower_freq_limit) & (frequencies <= upper_freq_limit)
 
@@ -53,7 +53,7 @@ def heart_rate() -> float:
 
     # Find the index corresponding to the peak frequency
     # Assuming heart rate is in a higher frequency range.
-    lower_freq_limit = 0.8
+    lower_freq_limit = 1 
     upper_freq_limit = 2
     mask = (frequencies >= lower_freq_limit) & (frequencies <= upper_freq_limit)
 
@@ -69,6 +69,14 @@ def heart_rate() -> float:
     return heart_rate_in_bpm
 
 
+def extract_phase_signal(range_fft_data):
+    # Perform the necessary processing to obtain the phase signal
+    phase_signal = np.angle(range_fft_data)
+    return phase_signal
+
+
 if __name__ == '__main__':
     print(respiration_cycles())
     print(heart_rate())
+    phase_signal = extract_phase_signal(RANGE_FFT)
+    print(respiration_cycles(phase_signal))
