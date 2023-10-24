@@ -67,20 +67,31 @@ def plot_task_1() -> None:
 
 def plot_task_2() -> None:
     """
-    Plot the successful rate of ALOHA and Slotted ALOHA with different N
+    Plot the successful rate of ALOHA and Slotted ALOHA with different N in a 2x2 grid.
     :return:
     """
-    N = [2, 10, 50, 100]
+    N_values = [2, 10, 50, 100]
     x = np.linspace(0, 2, 100)
-    for n in N:
-        y_aloha = ALOHA(x, n)
-        y_slotted_aloha = slotted_ALOHA(x, n)
-        plt.plot(x, y_aloha, label=f'ALOHA N={n}')
-        plt.plot(x, y_slotted_aloha, label=f'S_ALOHA N={n}')
-    plt.xlabel('G = offered load rate')
-    plt.ylabel('S = successful rate')
-    plt.grid()
-    plt.legend()
+
+    fig, axs = plt.subplots(2, 2, figsize=(10, 8))
+    fig.suptitle('ALOHA vs Slotted ALOHA')
+
+    for i in range(2):
+        for j in range(2):
+            n = N_values[i * 2 + j]
+            y_aloha = ALOHA(x, n)
+            y_slotted_aloha = slotted_ALOHA(x, n)
+
+            axs[i, j].plot(x, y_aloha, label=f'ALOHA N={n}')
+            axs[i, j].plot(x, y_slotted_aloha, label=f'S_ALOHA N={n}')
+            axs[i, j].set_title(f'N={n}')
+            axs[i, j].set_xlabel('G = offered load rate')
+            axs[i, j].set_ylabel('S = successful rate')
+            axs[i, j].grid()
+            axs[i, j].legend()
+
+    plt.tight_layout()
+    plt.subplots_adjust(top=0.9)  # Add some space for the title
     plt.show()
 
 
