@@ -15,6 +15,7 @@ SAMPLING_RATE = 500  # Sampling rate in Hz
 def respiration_cycles(phase: np.ndarray = PHASE) -> float:
     """
     Calculate the number of respiration cycles
+    :param phase: The phase signal
     :return: The number of respiration cycles
     """
     # Calculate the FFT of the phase signal
@@ -40,16 +41,17 @@ def respiration_cycles(phase: np.ndarray = PHASE) -> float:
     return number_of_respiration_cycles
 
 
-def heart_rate() -> float:
+def heart_rate(phase: np.ndarray = PHASE) -> float:
     """
     Calculate the heart rate (BPM)
+    :param phase: The phase signal
     :return: The heart rate in beats per minute
     """
     # Calculate the FFT of the phase signal
-    fft_result = np.fft.fft(PHASE)
+    fft_result = np.fft.fft(phase)
 
     # Calculate the corresponding frequencies
-    frequencies = np.fft.fftfreq(len(PHASE), 1 / FS)
+    frequencies = np.fft.fftfreq(len(phase), 1 / FS)
 
     # Find the index corresponding to the peak frequency
     # Assuming heart rate is in a higher frequency range.
@@ -80,3 +82,4 @@ if __name__ == '__main__':
     print(heart_rate())
     phase_signal = extract_phase_signal(RANGE_FFT)
     print(respiration_cycles(phase_signal))
+    print(heart_rate(phase_signal))
